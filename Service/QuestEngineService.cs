@@ -56,10 +56,10 @@ namespace QuestEngine.Service
             // calculate quest point earned and other figures
             var questPointsEarned = (input.ChipAmountBet * config.RateFromBet) + (input.PlayerLevel * config.LevelBonusRate);
             var lastTotalQuestPoint = (lastPlayerState != null) ? lastPlayerState.TotalQuestPoint : 0.0;
-            var accumunlatedQuestPoints = lastTotalQuestPoint + questPointsEarned;
-            var percenCompleted = Math.Min(accumunlatedQuestPoints / config.TotalQuestPoint * 100.0, 100.0);
+            var accumulatedQuestPoints = lastTotalQuestPoint + questPointsEarned;
+            var percenCompleted = Math.Min(accumulatedQuestPoints / config.TotalQuestPoint * 100.0, 100.0);
             var index = 0;
-            var milestones = config.MileStones.Where(m => m.QuestPointRequired <= accumunlatedQuestPoints)
+            var milestones = config.MileStones.Where(m => m.QuestPointRequired <= accumulatedQuestPoints)
                                               .Select<MileStoneSettings, MilestonesRecords>(m => {
                                                   index++;
                                                   return new MilestonesRecords {
@@ -77,7 +77,7 @@ namespace QuestEngine.Service
                 newPlayerState = new PlayerQuestState {
                     PlayerId = input.PlayerId,
                     QuestPointEarned = questPointsEarned,
-                    TotalQuestPoint = accumunlatedQuestPoints,
+                    TotalQuestPoint = accumulatedQuestPoints,
                     TotalQuestPercentCompleted = percenCompleted,
                     LastMilestoneIndex = lastMileStoneIndex,
                     TimeStamp = DateTime.Now
